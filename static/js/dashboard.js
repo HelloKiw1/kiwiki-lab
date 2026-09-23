@@ -16,6 +16,10 @@ function formatBytes(bytes) {
     return `${value.toFixed(index === 0 ? 0 : 1)} ${units[index]}`;
 }
 
+function formatCount(value) {
+    return Number.isFinite(value) ? value.toLocaleString() : unavailable;
+}
+
 function setProgress(id, value) {
     const element = byId(id);
     element.style.width = Number.isFinite(value) ? `${Math.max(0, Math.min(100, value))}%` : "0%";
@@ -70,7 +74,7 @@ function renderStatus(data) {
 
     byId("sent-value").textContent = formatBytes(network.bytes_sent);
     byId("received-value").textContent = formatBytes(network.bytes_received);
-    byId("packet-detail").textContent = `${network.packets_sent.toLocaleString()} sent • ${network.packets_received.toLocaleString()} received`;
+    byId("packet-detail").textContent = `${formatCount(network.packets_sent)} sent • ${formatCount(network.packets_received)} received`;
     byId("uptime-value").textContent = uptime.formatted;
     renderServices(data.services);
 }
@@ -89,4 +93,3 @@ async function updateDashboard() {
 
 updateDashboard();
 setInterval(updateDashboard, 5000);
-

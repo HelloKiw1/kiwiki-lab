@@ -15,13 +15,32 @@ def _server_ip():
     return None
 
 
-def get_network_status():
-    counters = psutil.net_io_counters()
+def _empty_counters():
     return {
-        "ip": _server_ip(),
-        "bytes_sent": counters.bytes_sent if counters else 0,
-        "bytes_received": counters.bytes_recv if counters else 0,
-        "packets_sent": counters.packets_sent if counters else 0,
-        "packets_received": counters.packets_recv if counters else 0,
+        "bytes_sent": None,
+        "bytes_received": None,
+        "packets_sent": None,
+        "packets_received": None,
     }
 
+
+def get_network_status():
+    status = {"ip": _server_ip(), **_empty_counters()}
+
+    try:
+        counters = psutil.net_io_counters()
+    except (PermissionError, OSError, psutil.Error):
+        return status
+
+    if counters is None:
+        return status
+
+    status.update(
+        {
+            "bytes_sent": getattr(counters, "bytes_sent", None),
+            "bytes_received": getattr(counters, "bytes_recv", None),
+            "packets_sent": getattr(counters, "packets_sent", None),
+            "packets_received": getattr(counters, "packets_recv", None),
+        }
+    )
+    return status
