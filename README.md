@@ -13,6 +13,7 @@ Exibir em um painel moderno informações do sistema em tempo real: CPU, memóri
 - `kiwiki/system.py`: CPU, memória, armazenamento, uptime e informações do sistema.
 - `kiwiki/battery.py`: bateria e sensores térmicos, com fallback para sysfs em Linux/Android.
 - `kiwiki/network.py`: endereço IP e contadores de rede.
+- `kiwiki/host_agent.py`: consulta opcional ao Host Agent local do Termux.
 - `kiwiki/services.py`: verificação somente leitura de portas locais.
 - `templates/`: template Jinja2 do dashboard.
 - `static/`: CSS e JavaScript sem framework frontend.
@@ -57,9 +58,14 @@ O Flask escuta localmente por padrão. Configuração de Nginx, domínio e deplo
 - Atualização automática de métricas a cada 5 segundos.
 - Fallback seguro quando bateria ou sensores de temperatura não existem.
 - Leitura de bateria e temperatura por `/sys/class/power_supply/` e `/sys/class/thermal/` quando disponíveis.
+- Integração opcional com `http://127.0.0.1:9100/status` para dados reais do Android, Wi-Fi e bateria.
 - Estado independente de Kiwiki Lab, Nginx, Django / Codex, SSH, PostgreSQL,
   MySQL/MariaDB e Redis por conexão TCP local.
 - Nenhum endpoint executa comandos shell ou ações administrativas.
+
+Quando o Host Agent está disponível, seus dados são usados primeiro para bateria,
+Wi-Fi, rede e dispositivo. Se ele estiver offline, o Kiwiki Lab usa os coletores
+locais existentes e exibe `Not available` onde não houver fallback.
 
 ## Adicionar serviços
 

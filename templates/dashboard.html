@@ -60,6 +60,7 @@
             <article class="metric-card panel">
                 <div class="card-heading"><span class="card-icon green">BAT</span><span class="tag" id="battery-tag">—</span></div>
                 <h3>Battery</h3>
+                <p class="muted" id="battery-health">Not available</p>
                 <div class="metric-value"><strong id="battery-value">—</strong><span id="battery-unit">%</span></div>
                 <div class="progress"><span id="battery-bar"></span></div>
                 <p class="muted" id="battery-detail">—</p>
@@ -75,6 +76,8 @@
             <article class="metric-card panel network-card">
                 <div class="card-heading"><span class="card-icon blue">NET</span><span class="tag online">ACTIVE</span></div>
                 <h3>Network</h3>
+                <div class="network-row"><span>Link speed</span><strong id="link-speed">Not available</strong></div>
+                <div class="network-row"><span>RSSI</span><strong id="rssi-value">Not available</strong></div>
                 <div class="network-row"><span>↑ Sent</span><strong id="sent-value">—</strong></div>
                 <div class="network-row"><span>↓ Received</span><strong id="received-value">—</strong></div>
                 <p class="muted" id="packet-detail">—</p>
@@ -92,6 +95,17 @@
                 <h3>Services</h3>
                 <div id="services-list" class="services-list"><p class="muted">Checking services...</p></div>
             </article>
+
+            <article class="metric-card panel device-card">
+                <div class="card-heading"><span class="card-icon pink">DEVICE</span><span class="tag">ANDROID</span></div>
+                <h3>Device</h3>
+                <div class="device-details">
+                    <div><span>MANUFACTURER</span><strong id="device-manufacturer">Not available</strong></div>
+                    <div><span>MODEL</span><strong id="device-model">Not available</strong></div>
+                    <div><span>DEVICE</span><strong id="device-name">Not available</strong></div>
+                    <div><span>ANDROID</span><strong id="android-version">Not available</strong></div>
+                </div>
+            </article>
         </section>
 
         <section class="system-info panel">
@@ -105,4 +119,3 @@
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
 </html>
-

@@ -48,11 +48,12 @@ function renderStatus(data) {
     const system = data.system;
     const battery = data.battery;
     const network = data.network;
+    const device = data.device || {};
     const uptime = system.uptime;
 
     byId("server-status").textContent = "System operational";
     byId("server-summary").textContent = `All core metrics are being monitored • ${uptime.formatted} uptime`;
-    byId("hostname").textContent = system.hostname || unavailable;
+    byId("hostname").textContent = "Kiwiki Lab";
     byId("ip-address").textContent = network.ip || unavailable;
     byId("os-value").textContent = system.os || unavailable;
     byId("python-value").textContent = system.python_version || unavailable;
@@ -66,6 +67,7 @@ function renderStatus(data) {
     byId("ram-detail").textContent = `${formatBytes(system.memory.used_bytes)} of ${formatBytes(system.memory.total_bytes)}`;
     byId("storage-detail").textContent = `${formatBytes(system.storage.used_bytes)} of ${formatBytes(system.storage.total_bytes)}`;
     byId("battery-detail").textContent = battery.available ? battery.status : unavailable;
+    byId("battery-health").textContent = battery.available && battery.health ? `Health: ${battery.health}` : unavailable;
     byId("battery-unit").textContent = battery.available ? "%" : "";
     byId("temperature-value").textContent = Number.isFinite(battery.temperature_c) ? battery.temperature_c.toFixed(1) : unavailable;
     byId("temperature-unit").textContent = Number.isFinite(battery.temperature_c) ? "°C" : "";
@@ -74,8 +76,14 @@ function renderStatus(data) {
 
     byId("sent-value").textContent = formatBytes(network.bytes_sent);
     byId("received-value").textContent = formatBytes(network.bytes_received);
+    byId("link-speed").textContent = Number.isFinite(network.link_speed_mbps) ? `${network.link_speed_mbps} Mbps` : unavailable;
+    byId("rssi-value").textContent = Number.isFinite(network.rssi) ? `${network.rssi} dBm` : unavailable;
     byId("packet-detail").textContent = `${formatCount(network.packets_sent)} sent • ${formatCount(network.packets_received)} received`;
     byId("uptime-value").textContent = uptime.formatted;
+    byId("device-manufacturer").textContent = device.manufacturer || unavailable;
+    byId("device-model").textContent = device.model || unavailable;
+    byId("device-name").textContent = device.device || unavailable;
+    byId("android-version").textContent = device.android || unavailable;
     renderServices(data.services);
 }
 

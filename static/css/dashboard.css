@@ -61,6 +61,10 @@ h3 { font-size: 14px; font-weight: 600; margin: 18px 0 8px; }
 .network-row { justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #1c263b; color: var(--muted); font-size: 12px; }
 .network-row strong { color: var(--text); font-size: 12px; font-weight: 600; }
 .network-card .muted { margin-top: 12px; }
+.device-details { display: grid; gap: 8px; }
+.device-details div { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid #1c263b; padding-bottom: 5px; }
+.device-details span { color: var(--muted); font-size: 9px; letter-spacing: .1em; }
+.device-details strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 600; }
 .services-card { grid-column: span 2; }
 .services-list { display: grid; gap: 1px; }
 .service-row { justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #1c263b; font-size: 12px; }
@@ -83,4 +87,3 @@ footer span { color: var(--cyan); padding: 0 6px; }
     .services-card { grid-column: auto; }
     .system-info { align-items: flex-start; gap: 15px; flex-direction: column; }
 }
-

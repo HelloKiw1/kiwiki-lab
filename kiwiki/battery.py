@@ -2,10 +2,45 @@ from pathlib import Path
 
 import psutil
 
+from .host_agent import get_host_agent_status
+
 
 NOT_AVAILABLE = None
 POWER_SUPPLY_PATH = Path("/sys/class/power_supply")
 THERMAL_PATH = Path("/sys/class/thermal")
+_AGENT_STATUS_UNSET = object()
+
+
+def _number(value, digits=None):
+    if value is None:
+        return None
+    try:
+        result = float(value)
+        return round(result, digits) if digits is not None else result
+    except (TypeError, ValueError):
+        return None
+
+
+def _agent_battery_status(host_agent_status):
+    if not isinstance(host_agent_status, dict):
+        return None
+    battery = host_agent_status.get("battery")
+    if not isinstance(battery, dict):
+        return None
+
+    raw_status = battery.get("status")
+    status = str(raw_status).replace("_", " ").title() if raw_status else "Unknown"
+    return {
+        "available": bool(battery.get("available")),
+        "percent": _number(battery.get("percentage"), 1),
+        "status": status,
+        "temperature_c": _number(battery.get("temperature_c"), 1),
+        "health": battery.get("health"),
+        "plugged": battery.get("plugged"),
+        "voltage_mv": _number(battery.get("voltage_mv"), 1),
+        "current_average": _number(battery.get("current_average"), 1),
+        "technology": battery.get("technology"),
+    }
 
 
 def _read_number(path):
@@ -65,7 +100,7 @@ def _thermal_temperature():
     return None
 
 
-def get_battery_status():
+def _local_battery_status():
     battery = None
     try:
         battery = psutil.sensors_battery()
@@ -78,6 +113,11 @@ def get_battery_status():
             "percent": round(battery.percent, 1),
             "status": "Charging" if battery.power_plugged else "Discharging",
             "temperature_c": NOT_AVAILABLE,
+            "health": NOT_AVAILABLE,
+            "plugged": battery.power_plugged,
+            "voltage_mv": NOT_AVAILABLE,
+            "current_average": NOT_AVAILABLE,
+            "technology": NOT_AVAILABLE,
         }
 
     battery = _sysfs_battery()
@@ -87,6 +127,28 @@ def get_battery_status():
             "percent": NOT_AVAILABLE,
             "status": "Not available",
             "temperature_c": _thermal_temperature(),
+            "health": NOT_AVAILABLE,
+            "plugged": NOT_AVAILABLE,
+            "voltage_mv": NOT_AVAILABLE,
+            "current_average": NOT_AVAILABLE,
+            "technology": NOT_AVAILABLE,
         }
 
+    battery.update(
+        {
+            "health": NOT_AVAILABLE,
+            "plugged": NOT_AVAILABLE,
+            "voltage_mv": NOT_AVAILABLE,
+            "current_average": NOT_AVAILABLE,
+            "technology": NOT_AVAILABLE,
+        }
+    )
     return battery
+
+
+def get_battery_status(host_agent_status=_AGENT_STATUS_UNSET):
+    if host_agent_status is _AGENT_STATUS_UNSET:
+        host_agent_status = get_host_agent_status()
+
+    agent_battery = _agent_battery_status(host_agent_status)
+    return agent_battery if agent_battery is not None else _local_battery_status()

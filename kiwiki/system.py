@@ -17,7 +17,17 @@ def _safe_call(function, default=None):
         return default
 
 
-def _uptime():
+def _is_proot_or_android(host_agent_status=None):
+    if host_agent_status is not None:
+        return True
+    markers = ("PROOT_TMP_DIR", "PROOT_LOADER", "TERMUX_VERSION", "ANDROID_ROOT", "ANDROID_DATA")
+    return any(os.environ.get(marker) for marker in markers)
+
+
+def _uptime(host_agent_status=None):
+    if _is_proot_or_android(host_agent_status):
+        return {"seconds": None, "formatted": "Not available"}
+
     boot_time = _safe_call(psutil.boot_time)
     if boot_time is None:
         return {"seconds": None, "formatted": "Not available"}
@@ -32,7 +42,7 @@ def _uptime():
     }
 
 
-def get_system_status():
+def get_system_status(host_agent_status=None):
     disk_path = os.path.abspath(os.sep)
     disk = _safe_call(lambda: psutil.disk_usage(disk_path))
     memory = _safe_call(psutil.virtual_memory)
@@ -58,5 +68,5 @@ def get_system_status():
             "used_bytes": getattr(disk, "used", None),
             "total_bytes": getattr(disk, "total", None),
         },
-        "uptime": _uptime(),
+        "uptime": _uptime(host_agent_status),
     }
