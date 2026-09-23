@@ -80,6 +80,9 @@ function renderStatus(data) {
     byId("rssi-value").textContent = Number.isFinite(network.rssi) ? `${network.rssi} dBm` : unavailable;
     byId("packet-detail").textContent = `${formatCount(network.packets_sent)} sent • ${formatCount(network.packets_received)} received`;
     byId("uptime-value").textContent = uptime.formatted;
+    const uptimeAvailable = Number.isFinite(uptime.seconds);
+    byId("uptime-tag").textContent = uptimeAvailable ? "RUNNING" : "N/A";
+    byId("uptime-tag").className = `tag ${uptimeAvailable ? "online" : ""}`;
     byId("device-manufacturer").textContent = device.manufacturer || unavailable;
     byId("device-model").textContent = device.model || unavailable;
     byId("device-name").textContent = device.device || unavailable;

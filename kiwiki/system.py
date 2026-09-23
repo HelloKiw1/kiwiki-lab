@@ -1,4 +1,3 @@
-from datetime import datetime, timezone
 import os
 import platform
 import socket
@@ -17,28 +16,39 @@ def _safe_call(function, default=None):
         return default
 
 
-def _is_proot_or_android(host_agent_status=None):
-    if host_agent_status is not None:
-        return True
-    markers = ("PROOT_TMP_DIR", "PROOT_LOADER", "TERMUX_VERSION", "ANDROID_ROOT", "ANDROID_DATA")
-    return any(os.environ.get(marker) for marker in markers)
-
-
-def _uptime(host_agent_status=None):
-    if _is_proot_or_android(host_agent_status):
-        return {"seconds": None, "formatted": "Not available"}
-
-    boot_time = _safe_call(psutil.boot_time)
-    if boot_time is None:
-        return {"seconds": None, "formatted": "Not available"}
-
-    seconds = max(0, int(datetime.now(timezone.utc).timestamp() - boot_time))
+def _format_uptime(seconds):
     days, remainder = divmod(seconds, 86400)
     hours, remainder = divmod(remainder, 3600)
     minutes, _ = divmod(remainder, 60)
+
+    parts = []
+    if days:
+        parts.append(f"{days}d")
+    if hours:
+        parts.append(f"{hours}h")
+    if minutes:
+        parts.append(f"{minutes}m")
+    if not parts or seconds % 60:
+        parts.append(f"{seconds % 60}s")
+    return " ".join(parts)
+
+
+def _uptime(host_agent_status=None):
+    if not isinstance(host_agent_status, dict):
+        return {"seconds": None, "formatted": "Not available", "source": "unavailable"}
+
+    try:
+        seconds = int(float(host_agent_status.get("agent_uptime_seconds")))
+    except (TypeError, ValueError):
+        return {"seconds": None, "formatted": "Not available", "source": "unavailable"}
+
+    if seconds < 0:
+        return {"seconds": None, "formatted": "Not available", "source": "unavailable"}
+
     return {
         "seconds": seconds,
-        "formatted": f"{days}d {hours:02d}h {minutes:02d}m",
+        "formatted": _format_uptime(seconds),
+        "source": "host_agent",
     }
 
 

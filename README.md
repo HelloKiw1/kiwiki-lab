@@ -18,7 +18,7 @@ Exibir em um painel moderno informações do sistema em tempo real: CPU, memóri
 - `templates/`: template Jinja2 do dashboard.
 - `static/`: CSS e JavaScript sem framework frontend.
 
-O endpoint `GET /api/status` retorna todas as métricas em JSON. O navegador consulta esse endpoint a cada 5 segundos, sem recarregar a página. Cada serviço inclui `id`, `ports`, `open_ports` e `status` (`Online`, `Offline` ou `Unknown`).
+O endpoint `GET /api/status` retorna todas as métricas em JSON. O navegador consulta esse endpoint a cada 5 segundos, sem recarregar a página. Cada serviço inclui `id`, `ports`, `open_ports` e `status` (`Online`, `Offline` ou `Unknown`). O uptime exibido pelo dashboard vem do `agent_uptime_seconds` do Host Agent e é identificado como `host_agent`.
 
 ## Dependências
 
