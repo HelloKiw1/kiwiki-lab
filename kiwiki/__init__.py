@@ -1,9 +1,10 @@
 from pathlib import Path
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 
 from .battery import get_battery_status
 from .host_agent import get_device_status, get_host_agent_status
+from .history import get_history_summary, start_history_collector
 from .network import get_network_status
 from .services import get_services_status
 from .system import get_system_status
@@ -18,6 +19,7 @@ def create_app():
         template_folder=str(BASE_DIR / "templates"),
         static_folder=str(BASE_DIR / "static"),
     )
+    start_history_collector()
 
     @app.get("/")
     def dashboard():
@@ -35,5 +37,12 @@ def create_app():
                 "services": get_services_status(),
             }
         )
+
+    @app.get("/api/history/summary")
+    def api_history_summary():
+        range_name = request.args.get("range", "1h")
+        if range_name not in {"1h", "6h", "24h", "7d"}:
+            return jsonify({"error": "Unsupported history range"}), 400
+        return jsonify(get_history_summary(range_name))
 
     return app

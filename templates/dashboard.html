@@ -3,115 +3,136 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0b1020">
+    <meta name="theme-color" content="#0b0f14">
     <title>Kiwiki Lab</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 </head>
 <body>
     <main class="shell">
         <header class="topbar">
-            <div>
-                <p class="eyebrow">PERSONAL SERVER MONITOR</p>
-                <h1>Kiwiki <span>Lab</span></h1>
+            <div class="brand-lockup">
+                <div class="brand-mark">K</div>
+                <div>
+                    <p class="eyebrow">INFRASTRUCTURE MONITOR</p>
+                    <h1>Kiwiki <span>Lab</span></h1>
+                </div>
             </div>
-            <div class="connection-state">
-                <span class="pulse"></span>
-                <span id="last-updated">Connecting...</span>
+            <div class="topbar-right">
+                <div class="connection-state"><span class="pulse"></span><span id="last-updated">Connecting...</span></div>
+                <div class="topbar-rule"></div>
+                <span class="topbar-label">LOCAL INSTANCE</span>
+                <div class="toolbar-controls">
+                    <button class="toolbar-button" id="theme-toggle" type="button" aria-label="Change theme"><span id="theme-icon">☼</span><span id="theme-label">Light theme</span></button>
+                    <button class="toolbar-button language-button" id="language-toggle" type="button" aria-label="Change language">PT-BR</button>
+                </div>
             </div>
         </header>
 
-        <section class="hero panel">
-            <div>
+        <section class="overview panel">
+            <div class="overview-main">
                 <p class="eyebrow">SERVER STATUS</p>
-                <h2 id="server-status">Checking system...</h2>
+                <div class="status-line"><span class="status-dot"></span><h2 id="server-status">Checking system...</h2></div>
                 <p class="muted" id="server-summary">Collecting metrics from this device</p>
             </div>
-            <div class="hero-meta">
-                <div><span>HOSTNAME</span><strong id="hostname">—</strong></div>
-                <div><span>IP ADDRESS</span><strong id="ip-address">—</strong></div>
+            <div class="overview-stats">
+                <div class="overview-stat"><span>HOSTNAME</span><strong id="hostname">-</strong></div>
+                <div class="overview-stat"><span>IP ADDRESS</span><strong id="ip-address">-</strong></div>
+                <div class="overview-stat"><span>KIWIKI UPTIME</span><strong id="overview-uptime">-</strong></div>
             </div>
         </section>
 
-        <section class="metrics-grid" aria-label="System metrics">
+        <section class="metrics-grid" aria-label="Current metrics">
             <article class="metric-card panel">
-                <div class="card-heading"><span class="card-icon cyan">CPU</span><span class="tag" id="cpu-tag">—</span></div>
-                <h3>CPU usage</h3>
-                <div class="metric-value"><strong id="cpu-value">—</strong><span>%</span></div>
+                <div class="card-heading"><span class="card-label">CPU</span><span class="tag" id="cpu-tag">-</span></div>
+                <div class="metric-title"><h3>Processor</h3><span class="metric-icon cyan">CPU</span></div>
+                <div class="metric-value"><strong id="cpu-value">-</strong><span>%</span></div>
                 <div class="progress"><span id="cpu-bar"></span></div>
-                <p class="muted">Current processor load</p>
+                <p class="muted">Current load</p>
             </article>
 
             <article class="metric-card panel">
-                <div class="card-heading"><span class="card-icon purple">RAM</span><span class="tag" id="ram-tag">—</span></div>
-                <h3>Memory</h3>
-                <div class="metric-value"><strong id="ram-value">—</strong><span>%</span></div>
+                <div class="card-heading"><span class="card-label">MEMORY</span><span class="tag" id="ram-tag">-</span></div>
+                <div class="metric-title"><h3>RAM</h3><span class="metric-icon purple">RAM</span></div>
+                <div class="metric-value"><strong id="ram-value">-</strong><span>%</span></div>
                 <div class="progress"><span id="ram-bar"></span></div>
-                <p class="muted" id="ram-detail">—</p>
+                <p class="muted" id="ram-detail">-</p>
             </article>
 
             <article class="metric-card panel">
-                <div class="card-heading"><span class="card-icon orange">SSD</span><span class="tag" id="storage-tag">—</span></div>
-                <h3>Storage</h3>
-                <div class="metric-value"><strong id="storage-value">—</strong><span>%</span></div>
+                <div class="card-heading"><span class="card-label">STORAGE</span><span class="tag" id="storage-tag">-</span></div>
+                <div class="metric-title"><h3>Disk</h3><span class="metric-icon orange">DSK</span></div>
+                <div class="metric-value"><strong id="storage-value">-</strong><span>%</span></div>
                 <div class="progress"><span id="storage-bar"></span></div>
-                <p class="muted" id="storage-detail">—</p>
+                <p class="muted" id="storage-detail">-</p>
             </article>
 
             <article class="metric-card panel">
-                <div class="card-heading"><span class="card-icon green">BAT</span><span class="tag" id="battery-tag">—</span></div>
-                <h3>Battery</h3>
-                <p class="muted" id="battery-health">Not available</p>
-                <div class="metric-value"><strong id="battery-value">—</strong><span id="battery-unit">%</span></div>
+                <div class="card-heading"><span class="card-label">BATTERY</span><span class="tag" id="battery-tag">-</span></div>
+                <div class="metric-title"><h3>Power</h3><span class="metric-icon green">BAT</span></div>
+                <div class="metric-value"><strong id="battery-value">-</strong><span id="battery-unit">%</span></div>
                 <div class="progress"><span id="battery-bar"></span></div>
-                <p class="muted" id="battery-detail">—</p>
+                <p class="muted" id="battery-detail">-</p>
+                <p class="card-note" id="battery-health">-</p>
             </article>
 
             <article class="metric-card panel">
-                <div class="card-heading"><span class="card-icon red">TEMP</span><span class="tag" id="temperature-tag">—</span></div>
-                <h3>Temperature</h3>
-                <div class="metric-value"><strong id="temperature-value">—</strong><span id="temperature-unit">°C</span></div>
-                <p class="muted">Device thermal sensor</p>
+                <div class="card-heading"><span class="card-label">THERMAL</span><span class="tag" id="temperature-tag">-</span></div>
+                <div class="metric-title"><h3>Temperature</h3><span class="metric-icon red">TMP</span></div>
+                <div class="metric-value"><strong id="temperature-value">-</strong><span id="temperature-unit">°C</span></div>
+                <p class="muted">Battery sensor</p>
             </article>
 
-            <article class="metric-card panel network-card">
-                <div class="card-heading"><span class="card-icon blue">NET</span><span class="tag online">ACTIVE</span></div>
-                <h3>Network</h3>
-                <div class="network-row"><span>Link speed</span><strong id="link-speed">Not available</strong></div>
-                <div class="network-row"><span>RSSI</span><strong id="rssi-value">Not available</strong></div>
-                <div class="network-row"><span>↑ Sent</span><strong id="sent-value">—</strong></div>
-                <div class="network-row"><span>↓ Received</span><strong id="received-value">—</strong></div>
-                <p class="muted" id="packet-detail">—</p>
+            <article class="metric-card panel network-summary-card">
+                <div class="card-heading"><span class="card-label">NETWORK</span><span class="tag online">ACTIVE</span></div>
+                <div class="metric-title"><h3>Traffic</h3><span class="metric-icon blue">NET</span></div>
+                <div class="network-summary-row"><span>↑ Sent</span><strong id="sent-value">-</strong></div>
+                <div class="network-summary-row"><span>↓ Received</span><strong id="received-value">-</strong></div>
+                <p class="card-note" id="packet-detail">-</p>
             </article>
+        </section>
 
-            <article class="metric-card panel">
-                <div class="card-heading"><span class="card-icon yellow">TIME</span><span class="tag online" id="uptime-tag">RUNNING</span></div>
-                <h3>Kiwiki Uptime</h3>
-                <div class="metric-value compact"><strong id="uptime-value">—</strong></div>
-                <p class="muted">Since monitoring started</p>
-            </article>
+        <section class="history-section">
+            <div class="section-heading">
+                <div><p class="eyebrow">TELEMETRY</p><h2>Performance history</h2></div>
+                <div class="range-controls" role="group" aria-label="History range">
+                    <button class="range-button" data-range="1h">1H</button>
+                    <button class="range-button" data-range="6h">6H</button>
+                    <button class="range-button active" data-range="24h">24H</button>
+                    <button class="range-button" data-range="7d">7D</button>
+                </div>
+            </div>
+            <div class="history-meta" id="history-meta">Loading history...</div>
+            <div class="charts-grid">
+                <article class="chart-card panel"><div class="chart-heading"><div><h3>CPU usage</h3><span>Processor load</span></div><b>%</b></div><svg id="cpu-chart" class="line-chart" viewBox="0 0 600 220" preserveAspectRatio="none" aria-label="CPU history"></svg></article>
+                <article class="chart-card panel"><div class="chart-heading"><div><h3>Memory usage</h3><span>RAM consumption</span></div><b>%</b></div><svg id="ram-chart" class="line-chart" viewBox="0 0 600 220" preserveAspectRatio="none" aria-label="Memory history"></svg></article>
+                <article class="chart-card panel"><div class="chart-heading"><div><h3>Temperature</h3><span>Battery sensor</span></div><b>°C</b></div><svg id="temperature-chart" class="line-chart" viewBox="0 0 600 220" preserveAspectRatio="none" aria-label="Temperature history"></svg></article>
+                <article class="chart-card panel"><div class="chart-heading"><div><h3>Battery level</h3><span>Charge percentage</span></div><b>%</b></div><svg id="battery-chart" class="line-chart" viewBox="0 0 600 220" preserveAspectRatio="none" aria-label="Battery history"></svg></article>
+                <article class="chart-card panel chart-wide"><div class="chart-heading"><div><h3>Network throughput</h3><span>Traffic between samples</span></div><b>bytes</b></div><div class="chart-legend"><span><i class="legend-rx"></i>Received</span><span><i class="legend-tx"></i>Sent</span></div><svg id="network-chart" class="line-chart" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-label="Network history"></svg></article>
+            </div>
+        </section>
 
-            <article class="metric-card panel services-card">
-                <div class="card-heading"><span class="card-icon pink">SVC</span><span class="tag" id="services-tag">—</span></div>
-                <h3>Services</h3>
+        <section class="lower-grid">
+            <article class="panel lower-card services-card">
+                <div class="section-heading compact"><div><p class="eyebrow">AVAILABILITY</p><h2>Services</h2></div><span class="tag" id="services-tag">-</span></div>
                 <div id="services-list" class="services-list"><p class="muted">Checking services...</p></div>
             </article>
-
-            <article class="metric-card panel device-card">
-                <div class="card-heading"><span class="card-icon pink">DEVICE</span><span class="tag">ANDROID</span></div>
-                <h3>Device</h3>
-                <div class="device-details">
-                    <div><span>MANUFACTURER</span><strong id="device-manufacturer">Not available</strong></div>
-                    <div><span>MODEL</span><strong id="device-model">Not available</strong></div>
-                    <div><span>DEVICE</span><strong id="device-name">Not available</strong></div>
-                    <div><span>ANDROID</span><strong id="android-version">Not available</strong></div>
+            <article class="panel lower-card device-card">
+                <div class="section-heading compact"><div><p class="eyebrow">ANDROID HOST</p><h2>Device</h2></div><span class="tag">HOST AGENT</span></div>
+                <div class="device-grid">
+                    <div><span>MANUFACTURER</span><strong id="device-manufacturer">-</strong></div>
+                    <div><span>MODEL</span><strong id="device-model">-</strong></div>
+                    <div><span>DEVICE</span><strong id="device-name">-</strong></div>
+                    <div><span>ANDROID</span><strong id="android-version">-</strong></div>
+                    <div><span>LINK SPEED</span><strong id="link-speed">-</strong></div>
+                    <div><span>RSSI</span><strong id="rssi-value">-</strong></div>
                 </div>
             </article>
         </section>
 
         <section class="system-info panel">
-            <div><span>OPERATING SYSTEM</span><strong id="os-value">—</strong></div>
-            <div><span>PYTHON</span><strong id="python-value">—</strong></div>
-            <div><span>UPDATE INTERVAL</span><strong>5 seconds</strong></div>
+            <div><span>OPERATING SYSTEM</span><strong id="os-value">-</strong></div>
+            <div><span>PYTHON</span><strong id="python-value">-</strong></div>
+            <div><span>INTERVAL</span><strong>5s status / 60s history</strong></div>
         </section>
 
         <footer>KIWIKI LAB <span>•</span> LOCAL SERVER DASHBOARD</footer>

@@ -14,11 +14,17 @@ Exibir em um painel moderno informações do sistema em tempo real: CPU, memóri
 - `kiwiki/battery.py`: bateria e sensores térmicos, com fallback para sysfs em Linux/Android.
 - `kiwiki/network.py`: endereço IP e contadores de rede.
 - `kiwiki/host_agent.py`: consulta opcional ao Host Agent local do Termux.
+- `kiwiki/history.py`: SQLite, coleta periódica, agregação horária e retenção.
 - `kiwiki/services.py`: verificação somente leitura de portas locais.
 - `templates/`: template Jinja2 do dashboard.
 - `static/`: CSS e JavaScript sem framework frontend.
 
 O endpoint `GET /api/status` retorna todas as métricas em JSON. O navegador consulta esse endpoint a cada 5 segundos, sem recarregar a página. Cada serviço inclui `id`, `ports`, `open_ports` e `status` (`Online`, `Offline` ou `Unknown`). O uptime exibido pelo dashboard vem do `agent_uptime_seconds` do Host Agent e é identificado como `host_agent`.
+
+O endpoint `GET /api/history/summary?range=1h|6h|24h|7d` fornece pontos prontos
+para os gráficos. O banco é criado automaticamente em `data/history.db`.
+Dados brutos são coletados a cada 60 segundos e retidos por 7 dias. A tabela
+horária mantém médias, mínimos, máximos e totais de tráfego por 90 dias.
 
 ## Dependências
 
@@ -56,11 +62,13 @@ O Flask escuta localmente por padrão. Configuração de Nginx, domínio e deplo
 
 - Dashboard escuro, responsivo e sem bibliotecas frontend externas.
 - Atualização automática de métricas a cada 5 segundos.
+- Histórico local em SQLite com gráficos de CPU, RAM, temperatura, bateria e rede.
+- Retenção automática de dados detalhados por 7 dias e agregados por hora por 90 dias.
 - Fallback seguro quando bateria ou sensores de temperatura não existem.
 - Leitura de bateria e temperatura por `/sys/class/power_supply/` e `/sys/class/thermal/` quando disponíveis.
 - Integração opcional com `http://127.0.0.1:9100/status` para dados reais do Android, Wi-Fi e bateria.
-- Estado independente de Kiwiki Lab, Nginx, Django / Codex, SSH, PostgreSQL,
-  MySQL/MariaDB e Redis por conexão TCP local.
+- Estado independente de Kiwiki Lab, Nginx, Django / Codex, SSH e PostgreSQL
+  por conexão TCP local.
 - Nenhum endpoint executa comandos shell ou ações administrativas.
 
 Quando o Host Agent está disponível, seus dados são usados primeiro para bateria,
