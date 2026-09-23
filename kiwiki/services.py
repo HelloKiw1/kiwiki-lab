@@ -23,8 +23,8 @@ class ServiceConfig:
 SERVICES = (
     ServiceConfig(id="kiwiki", name="Kiwiki Lab", ports=(5000,)),
     ServiceConfig(id="codex", name="Django / Codex", ports=(8000,)),
-    ServiceConfig(id="nginx", name="Nginx", ports=(80, 443)),
-    ServiceConfig(id="ssh", name="SSH", ports=(22,)),
+    ServiceConfig(id="nginx", name="Nginx", ports=(8080, 8081)),
+ServiceConfig(id="ssh", name="SSH", ports=(8022,)),
     ServiceConfig(id="postgresql", name="PostgreSQL", ports=(5432,)),
     ServiceConfig(id="mysql", name="MySQL / MariaDB", ports=(3306,)),
     ServiceConfig(id="redis", name="Redis", ports=(6379,)),
