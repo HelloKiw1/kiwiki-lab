@@ -229,8 +229,11 @@ function renderStatus(data) {
     byId("rssi-value").textContent = Number.isFinite(network.rssi) ? `${network.rssi} dBm` : unavailableText();
 
     const uptimeAvailable = Number.isFinite(uptime.seconds);
-    byId("uptime-tag").textContent = uptimeAvailable ? t("RUNNING") : t("N/A");
-    byId("uptime-tag").className = `tag ${uptimeAvailable ? "online" : ""}`;
+    const uptimeTag = byId("uptime-tag");
+    if (uptimeTag) {
+        uptimeTag.textContent = uptimeAvailable ? t("RUNNING") : t("N/A");
+        uptimeTag.className = `tag ${uptimeAvailable ? "online" : ""}`;
+    }
     byId("device-manufacturer").textContent = device.manufacturer || unavailableText();
     byId("device-model").textContent = device.model || unavailableText();
     byId("device-name").textContent = device.device || unavailableText();
